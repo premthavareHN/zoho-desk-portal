@@ -1,0 +1,54 @@
+                        <h5 class="mb-0">Recent Tickets</h5>
+                        <a href="/tickets" class="btn btn-sm btn-primary">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${tickets.empty}" class="alert alert-info">
+                            No tickets found. Create your first ticket to get started.
+                        </div>
+                        <div th:unless="${tickets.empty}">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Subject</th>
+                                        <th>Status</th>
+                                        <th>Priority</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="ticket : ${tickets}" th:if="${ticketStat.index < 5}">
+                                        <td th:text="${ticket.id}"></td>
+                                        <td th:text="${ticket.subject}"></td>
+                                        <td>
+                                            <span th:class="${'badge ' + (ticket.status == 'Open' ? 'bg-danger' : (ticket.status == 'In Progress' ? 'bg-warning' : 'bg-success'))}" 
+                                                  th:text="${ticket.status}"></span>
+                                        </td>
+                                        <td th:text="${ticket.priority}"></td>
+                                        <td>
+                                            <a th:href="@{'/tickets/' + ${ticket.id}}" class="btn btn-sm btn-info">View</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <a href="/tickets/new" class="btn btn-primary d-block mb-2">Create New Ticket</a>
+                        <a href="/tickets" class="btn btn-outline-secondary d-block">View All Tickets</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

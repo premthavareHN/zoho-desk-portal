@@ -1,0 +1,33 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-brand {
+  font-weight: bold;
+}
+
+.dashboard {
+  margin-bottom: 2rem;
+}
+
+.ticket-list,
+.ticket-detail,
+.ticket-form {
+  margin-bottom: 2rem;
+}
+
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  margin-bottom: 1rem;
+}
+
+.card-header {
+  padding: 1rem;
+  background-color: #f8f9fa;
+}
+
+.badge {
+  font-size: 0.85em;
+}
