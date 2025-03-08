@@ -1,0 +1,86 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.github.node-gradle.node' version '7.0.1'
+}
+
+group = 'com.thg'
+version = '0.0.1-SNAPSHOT'
+
+java {
+        toolchain {
+                languageVersion = JavaLanguageVersion.of(17)
+        }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://plugins.gradle.org/m2/' }
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.json:json:20220320'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+    
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+node {
+    version = '18.16.0'  // Updated from 16.15.0 to 18.16.0
+    npmVersion = '9.5.1'  // Updated from 8.5.5 to newer version
+    download = true
+    nodeProjectDir = file("${project.projectDir}/src/main/frontend")
+}
+
+task installFrontend(type: NpmTask) {
+    description = "Install frontend dependencies"
+    args = ['install']
+    execOverrides {
+        it.workingDir = "${project.projectDir}/src/main/frontend"
+    }
+}
+
+task buildFrontend(type: NpmTask) {
+    description = "Build React frontend"
+    dependsOn installFrontend
+    args = ['run', 'build']
+    execOverrides {
+        it.workingDir = "${project.projectDir}/src/main/frontend"
+    }
+}
+
+task copyFrontendBuildFiles(type: Copy) {
+    dependsOn buildFrontend
+    from "${project.projectDir}/src/main/frontend/build"
+    into "${project.projectDir}/src/main/resources/static"
+}
+
+processResources.dependsOn copyFrontendBuildFiles
+
+wrapper {
+    gradleVersion = '7.5.1'  // Changed from 7.5.4 to valid 7.5.1
+}
